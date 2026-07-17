@@ -1,0 +1,57 @@
+{
+  "manifest": {
+    "publishingInformation": {
+      "locales": {
+        "en-US": {
+          "name": "Grok Voice",
+          "summary": "Ask Grok anything by voice. Free daily questions; upgrade to Premium for unlimited Grok with memory.",
+          "description": "Grok Voice lets you talk to xAI's Grok through Alexa.\n\nFREE TIER\n• Limited free questions per day\n• Fast Grok answers optimized for voice\n• Optional Query Boost packs for extra questions\n\nPREMIUM SUBSCRIPTION\n• Unlimited questions\n• Smarter Grok model\n• Conversation memory across sessions\n• Priority-style longer answers\n\nJust say: Alexa, open Grok Voice. Then ask anything.\n\nExamples:\n• What is quantum computing?\n• Explain black holes simply\n• Why is the sky blue?\n\nPrivacy: Your questions are sent to the xAI Grok API to generate answers. See our privacy policy for details.\n\nThis skill is not affiliated with or endorsed by xAI beyond use of the Grok API.",
+          "examplePhrases": [
+            "Alexa, open Grok Voice",
+            "Alexa, ask Grok Voice what is gravity",
+            "Alexa, tell Grok Voice to upgrade"
+          ],
+          "keywords": [
+            "grok",
+            "ai",
+            "chatgpt",
+            "questions",
+            "assistant",
+            "xai",
+            "knowledge"
+          ]
+        }
+      },
+      "isAvailableWorldwide": false,
+      "testingInstructions": "1. Enable the skill and say Open Grok Voice.\n2. Ask a general knowledge question.\n3. Exhaust free daily queries (or set FREE_DAILY_LIMIT low in Lambda) to test upsell.\n4. Use Buy premium and Buy query boost with ISP test accounts.\n5. Verify inventory and status intents.\n6. Ensure XAI_API_KEY is set on the Lambda.",
+      "category": "EDUCATION_AND_REFERENCE",
+      "distributionCountries": [
+        "US"
+      ]
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "arn:aws:lambda:us-east-1:ACCOUNT_ID:function:alexa-grok-voice",
+          "sourceDir": "lambda"
+        },
+        "interfaces": []
+      }
+    },
+    "manifestVersion": "1.0",
+    "permissions": [],
+    "privacyAndCompliance": {
+      "allowsPurchases": true,
+      "usesPersonalInfo": false,
+      "isChildDirected": false,
+      "isExportCompliant": true,
+      "containsAds": false,
+      "locales": {
+        "en-US": {
+          "privacyPolicyUrl": "https://example.com/grok-voice/privacy",
+          "termsOfUseUrl": "https://example.com/grok-voice/terms"
+        }
+      }
+    }
+  }
+}

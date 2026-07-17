@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "type": "CONSUMABLE",
+  "referenceName": "query_boost_pack",
+  "publishingInformation": {
+    "locales": {
+      "en-US": {
+        "name": "Query Boost Pack",
+        "summary": "Add 25 extra Grok questions when free daily limit is used up.",
+        "description": "Need more questions today without a subscription?\n\nA Query Boost Pack adds 25 extra Grok Voice questions to your balance. Boosts are used after your free daily questions run out. Buy as many packs as you like.\n\nTip: Premium is better value if you chat every day.",
+        "smallIconUri": "https://example.com/icons/grok-boost-108.png",
+        "largeIconUri": "https://example.com/icons/grok-boost-512.png"
+      }
+    },
+    "distributionCountries": [
+      "US"
+    ],
+    "pricing": {
+      "amazon.com": {
+        "releaseDate": "2026-01-01T00:00:00Z",
+        "defaultPriceListing": {
+          "price": 0.99,
+          "currency": "USD"
+        }
+      }
+    },
+    "taxInformation": {
+      "category": "SOFTWARE"
+    }
+  },
+  "privacyAndCompliance": {
+    "locales": {
+      "en-US": {
+        "privacyPolicyUrl": "https://example.com/grok-voice/privacy"
+      }
+    }
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "grok voice",
+      "intents": [
+        {
+          "name": "AskGrokIntent",
+          "slots": [
+            {
+              "name": "question",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "ask {question}",
+            "ask grok {question}",
+            "ask about {question}",
+            "what is {question}",
+            "what are {question}",
+            "who is {question}",
+            "who was {question}",
+            "where is {question}",
+            "when is {question}",
+            "why is {question}",
+            "why do {question}",
+            "how do {question}",
+            "how does {question}",
+            "how can {question}",
+            "tell me {question}",
+            "tell me about {question}",
+            "explain {question}",
+            "explain to me {question}",
+            "I want to know {question}",
+            "I have a question {question}",
+            "question {question}",
+            "can you tell me {question}",
+            "can you explain {question}",
+            "search for {question}",
+            "look up {question}",
+            "{question}"
+          ]
+        },
+        {
+          "name": "WhatCanIBuyIntent",
+          "slots": [],
+          "samples": [
+            "what can I buy",
+            "what can I shop for",
+            "tell me what I can buy",
+            "what is available",
+            "what are the options",
+            "shop",
+            "store",
+            "purchases",
+            "what can I purchase"
+          ]
+        },
+        {
+          "name": "BuyIntent",
+          "slots": [
+            {
+              "name": "ProductName",
+              "type": "LIST_OF_PRODUCT_NAMES"
+            }
+          ],
+          "samples": [
+            "buy {ProductName}",
+            "purchase {ProductName}",
+            "I want {ProductName}",
+            "I want to buy {ProductName}",
+            "get {ProductName}",
+            "I'd like {ProductName}",
+            "give me {ProductName}",
+            "sign me up for {ProductName}"
+          ]
+        },
+        {
+          "name": "UpgradeIntent",
+          "slots": [],
+          "samples": [
+            "upgrade",
+            "upgrade to premium",
+            "go premium",
+            "subscribe",
+            "get premium",
+            "I want premium",
+            "unlimited",
+            "get unlimited",
+            "become premium"
+          ]
+        },
+        {
+          "name": "RefundSkillItemIntent",
+          "slots": [
+            {
+              "name": "ProductName",
+              "type": "LIST_OF_PRODUCT_NAMES"
+            }
+          ],
+          "samples": [
+            "return {ProductName}",
+            "refund {ProductName}",
+            "cancel my subscription for {ProductName}",
+            "cancel the subscription for {ProductName}",
+            "cancel {ProductName}",
+            "I want a refund for {ProductName}",
+            "I want to return {ProductName}",
+            "unsubscribe from {ProductName}"
+          ]
+        },
+        {
+          "name": "InventoryIntent",
+          "slots": [],
+          "samples": [
+            "how many questions do I have left",
+            "how many queries left",
+            "what's my balance",
+            "what is my balance",
+            "how many boosts do I have",
+            "check my inventory",
+            "my inventory",
+            "how many free questions",
+            "questions remaining",
+            "remaining questions"
+          ]
+        },
+        {
+          "name": "StatusIntent",
+          "slots": [],
+          "samples": [
+            "what is my status",
+            "what's my plan",
+            "am I premium",
+            "what tier am I on",
+            "my account",
+            "account status",
+            "subscription status"
+          ]
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.RepeatIntent",
+          "samples": []
+        }
+      ],
+      "types": [
+        {
+          "name": "LIST_OF_PRODUCT_NAMES",
+          "values": [
+            {
+              "id": "grok_premium_subscription",
+              "name": {
+                "value": "premium",
+                "synonyms": [
+                  "grok premium",
+                  "premium subscription",
+                  "subscription",
+                  "unlimited",
+                  "upgrade",
+                  "pro",
+                  "premium plan"
+                ]
+              }
+            },
+            {
+              "id": "query_boost_pack",
+              "name": {
+                "value": "query boost",
+                "synonyms": [
+                  "boost",
+                  "boost pack",
+                  "query pack",
+                  "extra queries",
+                  "more questions",
+                  "query boost pack",
+                  "question pack"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

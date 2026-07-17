@@ -1,0 +1,11 @@
+node_modules/
+lambda/node_modules/
+.env
+*.zip
+.ask/
+.vscode/
+.idea/
+*.log
+.DS_Store
+grok-voice-lambda.zip
+coverage/

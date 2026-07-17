@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "type": "SUBSCRIPTION",
+  "referenceName": "grok_premium_subscription",
+  "publishingInformation": {
+    "locales": {
+      "en-US": {
+        "name": "Grok Voice Premium",
+        "summary": "Unlimited Grok questions, smarter model, and conversation memory.",
+        "description": "Unlock the full Grok Voice experience:\n• Unlimited daily questions\n• Access to the premium Grok model\n• Conversation memory across sessions\n• Longer, richer spoken answers\n\nCancel anytime in your Amazon account or by asking Grok Voice to cancel Premium.",
+        "smallIconUri": "https://example.com/icons/grok-premium-108.png",
+        "largeIconUri": "https://example.com/icons/grok-premium-512.png"
+      }
+    },
+    "distributionCountries": [
+      "US"
+    ],
+    "pricing": {
+      "amazon.com": {
+        "releaseDate": "2026-01-01T00:00:00Z",
+        "defaultPriceListing": {
+          "price": 4.99,
+          "currency": "USD"
+        }
+      }
+    },
+    "taxInformation": {
+      "category": "SOFTWARE"
+    }
+  },
+  "privacyAndCompliance": {
+    "locales": {
+      "en-US": {
+        "privacyPolicyUrl": "https://example.com/grok-voice/privacy"
+      }
+    }
+  },
+  "subscriptionInformation": {
+    "subscriptionPaymentFrequency": "MONTHLY"
+  }
+}
