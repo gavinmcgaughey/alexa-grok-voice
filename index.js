@@ -25,16 +25,17 @@ app.post('/', async (req, res) => {
       speechText = "Welcome to Grok Voice. Ask me anything!";
     } else if (request.type === "IntentRequest") {
       const intent = request.intent.name;
-      console.log('Intent:', intent);
+      const isPremium = req.body.context?.System?.user?.permissions?.purchased?.includes('grok_premium_subscription') || false;
       
-      const query = request.intent.slots?.query?.value || 
-                    request.intent.slots?.searchQuery?.value || 
-                    "Tell me something interesting";
+      console.log('Intent:', intent, 'Premium:', isPremium);
+      
+      const query = request.intent.slots?.query?.value || "Tell me something interesting";
       
       console.log('Query:', query);
 
       if (XAI_API_KEY) {
-        console.log('Calling Grok API...');
+        const model = isPremium ? "grok-4.5" : "grok-4.3";
+        console.log('Calling Grok with model:', model);
         const response = await fetch("https://api.x.ai/v1/responses", {
           method: "POST",
           headers: {
@@ -42,7 +43,7 @@ app.post('/', async (req, res) => {
             "Authorization": `Bearer ${XAI_API_KEY}`
           },
           body: JSON.stringify({
-            model: "grok-4.3",
+            model: model,
             input: [{ role: "user", content: query }]
           })
         });
