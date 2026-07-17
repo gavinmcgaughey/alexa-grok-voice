@@ -13,6 +13,9 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', async (req, res) => {
+  console.log('=== FULL REQUEST RECEIVED ===');
+  console.log(JSON.stringify(req.body, null, 2));
+
   try {
     const request = req.body.request;
     let speechText = "I'm not quite sure how to help you with that.";
@@ -20,10 +23,17 @@ app.post('/', async (req, res) => {
     if (request.type === "LaunchRequest") {
       speechText = "Welcome to Grok Voice. Ask me anything!";
     } else if (request.type === "IntentRequest") {
-      // Catch-all for any intent
-      const query = request.intent.slots?.query?.value || request.intent.slots?.searchQuery?.value || "Tell me something interesting";
+      const intent = request.intent.name;
+      console.log('Intent:', intent);
       
+      const query = request.intent.slots?.query?.value || 
+                    request.intent.slots?.searchQuery?.value || 
+                    "Tell me something interesting";
+      
+      console.log('Query:', query);
+
       if (XAI_API_KEY) {
+        console.log('Calling Grok API...');
         const response = await fetch("https://api.x.ai/v1/responses", {
           method: "POST",
           headers: {
@@ -36,6 +46,7 @@ app.post('/', async (req, res) => {
           })
         });
         const data = await response.json();
+        console.log('Grok response:', data);
         speechText = data.output || "Sorry, I couldn't get a response from Grok.";
       } else {
         speechText = "Grok API key is not configured.";
@@ -53,7 +64,7 @@ app.post('/', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error(error);
+    console.error('Error:', error);
     res.json({
       version: "1.0",
       response: {
