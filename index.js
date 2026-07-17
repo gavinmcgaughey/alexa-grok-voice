@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 const XAI_API_KEY = process.env.XAI_API_KEY;
 
 app.get('/', (req, res) => {
-  res.send('Grok Voice Skill is running!');
+  res.send('Grok Voice Skill is running on Railway!');
 });
 
 app.post('/', async (req, res) => {
@@ -20,27 +20,25 @@ app.post('/', async (req, res) => {
     if (request.type === "LaunchRequest") {
       speechText = "Welcome to Grok Voice. Ask me anything!";
     } else if (request.type === "IntentRequest") {
-      const intent = request.intent.name;
-      if (intent === "AskGrokIntent" || intent === "AMAZON.FallbackIntent") {
-        const query = request.intent.slots?.query?.value || "Tell me something interesting";
-        
-        if (XAI_API_KEY) {
-          const response = await fetch("https://api.x.ai/v1/responses", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${XAI_API_KEY}`
-            },
-            body: JSON.stringify({
-              model: "grok-4.3",
-              input: [{ role: "user", content: query }]
-            })
-          });
-          const data = await response.json();
-          speechText = data.output || "Sorry, I couldn't get a response from Grok.";
-        } else {
-          speechText = "Grok API key is not configured.";
-        }
+      // Catch-all for any intent
+      const query = request.intent.slots?.query?.value || request.intent.slots?.searchQuery?.value || "Tell me something interesting";
+      
+      if (XAI_API_KEY) {
+        const response = await fetch("https://api.x.ai/v1/responses", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${XAI_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "grok-4.3",
+            input: [{ role: "user", content: query }]
+          })
+        });
+        const data = await response.json();
+        speechText = data.output || "Sorry, I couldn't get a response from Grok.";
+      } else {
+        speechText = "Grok API key is not configured.";
       }
     }
 
