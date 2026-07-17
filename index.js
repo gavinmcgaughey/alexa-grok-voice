@@ -14,28 +14,31 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', async (req, res) => {
-  console.log('=== FULL REQUEST RECEIVED ===');
+  console.log('=== FULL REQUEST ===');
   console.log(JSON.stringify(req.body, null, 2));
 
   try {
-    const request = req.body.request;
+    const request = req.body.request || req.body;
     let speechText = "I'm not quite sure how to help you with that.";
 
     if (request.type === "LaunchRequest") {
       speechText = "Welcome to Grok Voice. Ask me anything!";
-    } else if (request.type === "IntentRequest") {
-      const intent = request.intent.name;
-      const isPremium = req.body.context?.System?.user?.permissions?.purchased?.includes('grok_premium_subscription') || false;
+    } else {
+      // Catch all queries
+      let query = "Tell me something interesting";
       
-      console.log('Intent:', intent, 'Premium:', isPremium);
-      
-      const query = request.intent.slots?.query?.value || "Tell me something interesting";
-      
-      console.log('Query:', query);
+      if (request.intent && request.intent.slots) {
+        query = request.intent.slots.query?.value || 
+                request.intent.slots.searchQuery?.value || 
+                query;
+      } else if (request.intent && request.intent.name) {
+        query = request.intent.name;
+      }
+
+      console.log('Final query:', query);
 
       if (XAI_API_KEY) {
-        const model = isPremium ? "grok-4.5" : "grok-4.3";
-        console.log('Calling Grok with model:', model);
+        console.log('Calling Grok...');
         const response = await fetch("https://api.x.ai/v1/responses", {
           method: "POST",
           headers: {
@@ -43,15 +46,12 @@ app.post('/', async (req, res) => {
             "Authorization": `Bearer ${XAI_API_KEY}`
           },
           body: JSON.stringify({
-            model: model,
+            model: "grok-4.3",
             input: [{ role: "user", content: query }]
           })
         });
         const data = await response.json();
-        console.log('Grok response:', data);
-        speechText = data.output || "Sorry, I couldn't get a response from Grok.";
-      } else {
-        speechText = "Grok API key is not configured.";
+        speechText = data.output || "Sorry, I couldn't get a response.";
       }
     }
 
