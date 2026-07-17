@@ -6,6 +6,6 @@ This skill uses the xAI Grok API to process your voice queries.
 - Queries are sent to xAI for processing.
 - No personal data is collected beyond what Alexa provides.
 
-For questions, contact support@yourdomain.com
+For questions, contact grokxalexa@outlook.com
 
 Last updated: July 17, 2026
