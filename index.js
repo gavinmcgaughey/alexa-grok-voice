@@ -1,74 +1,74 @@
-/**
- * Grok Voice — Alexa custom skill entrypoint (AWS Lambda).
- *
- * Flow:
- *   Request → LoadUserInterceptor (DynamoDB + ISP) → Intent handler
- *          → Grok API / ISP directives → Response
- */
+const express = require('express');
+const bodyParser = require('body-parser');
 
-'use strict';
+const app = express();
+const port = process.env.PORT || 8080;
 
-const Alexa = require('ask-sdk-core');
-const { config, assertConfig } = require('./config');
+app.use(bodyParser.json());
 
-const { LaunchRequestHandler } = require('./handlers/LaunchRequestHandler');
-const { AskGrokIntentHandler } = require('./handlers/AskGrokIntentHandler');
-const {
-  YesIntentHandler,
-  NoIntentHandler,
-  WhatCanIBuyIntentHandler,
-  BuyIntentHandler,
-  RefundSkillItemIntentHandler,
-  InventoryIntentHandler,
-  StatusIntentHandler,
-  BuyResponseHandler,
-  CancelProductResponseHandler,
-  UpgradeIntentHandler,
-} = require('./handlers/IspHandlers');
-const {
-  HelpIntentHandler,
-  CancelAndStopIntentHandler,
-  FallbackIntentHandler,
-  RepeatIntentHandler,
-  SessionEndedRequestHandler,
-  NavigateHomeIntentHandler,
-} = require('./handlers/BuiltInHandlers');
-const { ErrorHandler } = require('./handlers/ErrorHandler');
-const { LoadUserInterceptor } = require('./interceptors/LoadUserInterceptor');
-const {
-  LoggingRequestInterceptor,
-  LoggingResponseInterceptor,
-} = require('./interceptors/LoggingInterceptor');
+const XAI_API_KEY = process.env.XAI_API_KEY;
 
-assertConfig();
+app.get('/', (req, res) => {
+  res.send('Grok Voice Skill is running!');
+});
 
-const skillBuilder = Alexa.SkillBuilders.custom()
-  .addRequestHandlers(
-    LaunchRequestHandler,
-    AskGrokIntentHandler,
-    UpgradeIntentHandler,
-    WhatCanIBuyIntentHandler,
-    BuyIntentHandler,
-    RefundSkillItemIntentHandler,
-    InventoryIntentHandler,
-    StatusIntentHandler,
-    YesIntentHandler,
-    NoIntentHandler,
-    BuyResponseHandler,
-    CancelProductResponseHandler,
-    HelpIntentHandler,
-    RepeatIntentHandler,
-    CancelAndStopIntentHandler,
-    FallbackIntentHandler,
-    NavigateHomeIntentHandler,
-    SessionEndedRequestHandler
-  )
-  .addRequestInterceptors(LoggingRequestInterceptor, LoadUserInterceptor)
-  .addResponseInterceptors(LoggingResponseInterceptor)
-  .addErrorHandlers(ErrorHandler)
-  .withApiClient(new Alexa.DefaultApiClient());
+app.post('/', async (req, res) => {
+  try {
+    const request = req.body.request;
+    let speechText = "I'm not quite sure how to help you with that.";
 
-exports.handler = skillBuilder.lambda();
+    if (request.type === "LaunchRequest") {
+      speechText = "Welcome to Grok Voice. Ask me anything!";
+    } else if (request.type === "IntentRequest") {
+      const intent = request.intent.name;
+      if (intent === "AskGrokIntent" || intent === "AMAZON.FallbackIntent") {
+        const query = request.intent.slots?.query?.value || "Tell me something interesting";
+        
+        if (XAI_API_KEY) {
+          const response = await fetch("https://api.x.ai/v1/responses", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${XAI_API_KEY}`
+            },
+            body: JSON.stringify({
+              model: "grok-4.3",
+              input: [{ role: "user", content: query }]
+            })
+          });
+          const data = await response.json();
+          speechText = data.output || "Sorry, I couldn't get a response from Grok.";
+        } else {
+          speechText = "Grok API key is not configured.";
+        }
+      }
+    }
 
-// For local unit tests / non-Lambda invoke
-exports.skill = skillBuilder.create();
+    res.json({
+      version: "1.0",
+      response: {
+        outputSpeech: {
+          type: "PlainText",
+          text: speechText
+        },
+        shouldEndSession: false
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.json({
+      version: "1.0",
+      response: {
+        outputSpeech: {
+          type: "PlainText",
+          text: "Sorry, something went wrong."
+        },
+        shouldEndSession: false
+      }
+    });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Grok Voice server running on port ${port}`);
+});
