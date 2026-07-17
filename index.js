@@ -10,64 +10,52 @@ app.use(bodyParser.json());
 const XAI_API_KEY = process.env.XAI_API_KEY;
 
 app.get('/', (req, res) => {
-  res.send('Grok Voice Skill is running!');
+  res.send('Grok Voice is running!');
 });
 
 app.post('/', async (req, res) => {
   console.log('Request received');
 
+  let speechText = "Sorry, I couldn't get a response.";
+
   try {
     const request = req.body.request || req.body;
-    let speechText = "I'm not quite sure how to help you with that.";
+    let query = "Tell me something interesting";
 
-    if (request.type === "LaunchRequest") {
-      speechText = "Welcome to Grok Voice. Ask me anything!";
-    } else {
-      let query = "Tell me something interesting";
-      if (request.intent && request.intent.slots) {
-        query = request.intent.slots.query?.value || query;
-      }
-
-      if (XAI_API_KEY) {
-        const response = await fetch("https://api.x.ai/v1/responses", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${XAI_API_KEY}`
-          },
-          body: JSON.stringify({
-            model: "grok-4.3",
-            input: [{ role: "user", content: query }]
-          })
-        });
-        const data = await response.json();
-        speechText = data.output || "Sorry, I couldn't get a response.";
-      }
+    if (request.intent && request.intent.slots) {
+      query = request.intent.slots.query?.value || query;
     }
 
-    res.json({
-      version: "1.0",
-      response: {
-        outputSpeech: {
-          type: "PlainText",
-          text: speechText
+    if (XAI_API_KEY) {
+      console.log('Calling Grok with query:', query);
+      const response = await fetch("https://api.x.ai/v1/responses", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${XAI_API_KEY}`
         },
-        shouldEndSession: false
-      }
-    });
+        body: JSON.stringify({
+          model: "grok-4.3",
+          input: [{ role: "user", content: query }]
+        })
+      });
+      const data = await response.json();
+      speechText = data.output || "Sorry, I couldn't get a response.";
+    }
   } catch (error) {
-    console.error(error);
-    res.json({
-      version: "1.0",
-      response: {
-        outputSpeech: {
-          type: "PlainText",
-          text: "Sorry, something went wrong."
-        },
-        shouldEndSession: false
-      }
-    });
+    console.error('Error:', error);
   }
+
+  res.json({
+    version: "1.0",
+    response: {
+      outputSpeech: {
+        type: "PlainText",
+        text: speechText
+      },
+      shouldEndSession: false
+    }
+  });
 });
 
 app.listen(port, () => {
