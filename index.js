@@ -10,12 +10,11 @@ app.use(bodyParser.json());
 const XAI_API_KEY = process.env.XAI_API_KEY;
 
 app.get('/', (req, res) => {
-  res.send('Grok Voice Skill is running on Railway!');
+  res.send('Grok Voice Skill is running!');
 });
 
 app.post('/', async (req, res) => {
-  console.log('=== FULL REQUEST ===');
-  console.log(JSON.stringify(req.body, null, 2));
+  console.log('Request received');
 
   try {
     const request = req.body.request || req.body;
@@ -24,21 +23,12 @@ app.post('/', async (req, res) => {
     if (request.type === "LaunchRequest") {
       speechText = "Welcome to Grok Voice. Ask me anything!";
     } else {
-      // Catch all queries
       let query = "Tell me something interesting";
-      
       if (request.intent && request.intent.slots) {
-        query = request.intent.slots.query?.value || 
-                request.intent.slots.searchQuery?.value || 
-                query;
-      } else if (request.intent && request.intent.name) {
-        query = request.intent.name;
+        query = request.intent.slots.query?.value || query;
       }
 
-      console.log('Final query:', query);
-
       if (XAI_API_KEY) {
-        console.log('Calling Grok...');
         const response = await fetch("https://api.x.ai/v1/responses", {
           method: "POST",
           headers: {
@@ -66,7 +56,7 @@ app.post('/', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error:', error);
+    console.error(error);
     res.json({
       version: "1.0",
       response: {
@@ -81,5 +71,5 @@ app.post('/', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Grok Voice server running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });
